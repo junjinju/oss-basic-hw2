@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-4">관리자 대시보드</h2>
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>순위</th>
+        <th>제목</th>
+        <th>소유자</th>
+        <th>평균 평점</th>
+        <th>관리</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></td>
+          <td>{{ project.user.username }}</td>
+          <td>{{ project.avg_score|floatformat:1 }}</td>
+          <td>
+            <a href="{% url 'project_update' project.pk %}" class="btn btn-sm btn-warning">수정</a>
+            <a href="{% url 'project_delete' project.pk %}" class="btn btn-sm btn-danger">삭제</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

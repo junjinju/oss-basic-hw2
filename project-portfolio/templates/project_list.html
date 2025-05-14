@@ -1,0 +1,52 @@
+{# base.html 레이아웃을 상속하여 공통 구조를 재사용 #}
+{% extends "base.html" %}
+
+{# base.html에서 정의된 content 블록에 아래 내용을 삽입 #}
+{% block content %}
+
+  {# 제목 및 정렬 옵션을 포함하는 상단 바 #}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">All Projects</h2>  {# 제목 텍스트 #}
+
+    <div>
+      {# GET 요청을 통해 정렬 기준을 서버에 전달하는 폼 #}
+      <form method="get" class="d-inline-block">
+        <select name="sort" class="form-select" onchange="this.form.submit()" style="width: 200px;">
+          {# 정렬 기준 선택 옵션 - 선택된 값은 selected 속성으로 표시 #}
+          <option value="name" {% if sort == 'name' %}selected{% endif %}>이름순</option>
+          <option value="score" {% if sort == 'score' %}selected{% endif %}>평균 평점순</option>
+          <option value="recent" {% if sort == 'recent' %}selected{% endif %}>최신순</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  {# 프로젝트 목록을 그리드로 표시 #}
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for project in projects %}
+      <div class="col">
+        <div class="card h-100">  {# 각 프로젝트를 카드 형태로 표시 #}
+          <div class="card-body">
+            <h5 class="card-title">{{ project.title }}</h5>  {# 프로젝트 제목 #}
+            <p class="card-text">소유자: {{ project.user.username }}</p>  {# 소유자 표시 #}
+            <p class="card-text">
+              평균 평점: {{ project.avg_score|default:"0"|floatformat:1 }}
+              {# 평점이 없으면 0으로 표시하고, 소수점 한 자리까지 처리 #}
+            </p>
+
+            {# 프로젝트 상세 페이지로 이동하는 버튼 #}
+            <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary">상세 보기</a>
+
+            {# 로그인한 사용자일 때만 수정/삭제 버튼 조건부 표시 #}
+            {% if user.is_authenticated %}
+              {% if user == project.user or user.is_staff %}
+                <a href="{% url 'project_update' project.pk %}" class="btn btn-warning btn-sm">수정</a>
+                <a href="{% url 'project_delete' project.pk %}" class="btn btn-danger btn-sm">삭제</a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

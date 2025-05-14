@@ -1,0 +1,26 @@
+{# base.html 템플릿을 상속받아 공통 레이아웃을 재사용 #}
+{% extends "base.html" %}
+
+{# base.html에서 정의된 content 블록 안에 아래 내용을 삽입 #}
+{% block content %}
+  {# Bootstrap 카드 컴포넌트를 사용하여 전체 폼을 감싸고, 최대 너비를 600px로 제한 및 가운데 정렬 #}
+  <div class="card mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+      {# 카드 제목을 가운데 정렬로 표시 #}
+      <h3 class="card-title text-center">프로젝트 등록/수정</h3>
+
+      {# 프로젝트 정보 입력 폼: 현재 페이지로 POST 방식 전송 #}
+      <form method="post">
+        {% csrf_token %}
+
+        {# Django 뷰에서 전달된 폼(form 객체)을 <p> 태그 형태로 렌더링하여 모든 필드를 출력 #}
+        {{ form.as_p }}
+
+        {# '저장' 버튼을 카드 너비 전체로 확장 및 초록색 Bootstrap 버튼으로 스타일링 #}
+        <div class="d-grid">
+          <button type="submit" class="btn btn-success">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

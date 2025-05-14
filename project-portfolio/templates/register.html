@@ -1,0 +1,26 @@
+{# base.html 템플릿을 상속받아 공통 레이아웃을 재사용 #}
+{% extends "base.html" %}
+
+{# base.html의 content 블록에 아래 HTML을 삽입 #}
+{% block content %}
+{# Bootstrap 카드 컴포넌트로 회원가입 폼을 감싸고, 너비를 500px로 제한 및 가운데 정렬 #}
+  <div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-body">
+      {# 카드 상단 제목을 가운데 정렬로 표시 #}
+      <h3 class="card-title text-center">회원가입</h3>
+      
+      {# 폼: 현재 URL로 POST 전송 #}
+      <form method="post">
+        {% csrf_token %}
+
+        {# 전달받은 폼 객체(form)를 <p> 태그 기반으로 렌더링하여 표시 #}
+        {{ form.as_p }}
+
+        {# 버튼을 카드 너비 전체로 확장하고, Bootstrap의 파란색 버튼 스타일 적용 #}
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">회원가입</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

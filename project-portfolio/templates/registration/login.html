@@ -1,0 +1,26 @@
+{# 공통 레이아웃을 상속받아, 네비게이션바와 스타일을 재사용 #}
+{% extends "base.html" %}
+
+{# base.html의 content 블록에 아래 내용을 삽입 #}
+{% block content %}
+  {# Bootstrap 카드 컴포넌트: 폼을 감싸고 가운데 정렬하며, 최대 너비는 400px로 제한 #}
+  <div class="card mx-auto" style="max-width: 400px;">
+    <div class="card-body">
+      {# 카드 제목: "로그인" 텍스트를 가운데 정렬 #}
+      <h3 class="card-title text-center">로그인</h3>
+
+      {# 로그인 입력 폼: 현재 페이지로 POST 방식 전송 #}
+      <form method="post">
+        {% csrf_token %}
+
+        {# 서버에서 전달받은 로그인 폼(form 객체)을 <p> 단위로 렌더링하여 필드 입력창을 표시 #}
+        {{ form.as_p }}
+
+        {# 로그인 버튼: 카드의 너비 전체를 차지하며, Bootstrap 파란색 버튼으로 스타일링 #}
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">로그인</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

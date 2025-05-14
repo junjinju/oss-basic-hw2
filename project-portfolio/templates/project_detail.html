@@ -1,0 +1,48 @@
+{# base.html 레이아웃을 상속하여 공통 구조를 재사용 #}
+{% extends "base.html" %}
+
+{# base.html의 content 블록에 아래 내용을 삽입 #}
+{% block content %}
+
+  {# Bootstrap 카드 컴포넌트로 프로젝트 상세 정보를 감싸는 구조 #}
+  <div class="card">
+    <div class="card-body">
+      
+      {# 프로젝트 제목 #}
+      <h2 class="card-title">{{ project.title }}</h2>
+      
+      {# 프로젝트 소유자 #}
+      <p class="card-subtitle text-muted">소유자: {{ project.user.username }}</p>
+      
+      {# 프로젝트 설명 #}
+      <p class="mt-3">{{ project.description }}</p>
+
+      {# 평균 평점 (views.py에서 annotate된 평균값 사용 가능) #}
+      <p>평균 평점: {{ project.average_rating }}</p>
+
+      {# 로그인한 사용자일 경우, 평점 폼 또는 평가 완료 메시지를 표시 #}
+      {% if user.is_authenticated %}
+        
+        {# 해당 사용자가 이 프로젝트에 아직 평점을 등록하지 않은 경우 #}
+        {% if not rating_given %}
+          <form method="post">
+            {% csrf_token %}  {# CSRF 보호 토큰 필수 #}
+            {{ form.as_p }}  {# RatingForm을 <p> 태그 형식으로 출력함 #}
+            <button type="submit" class="btn btn-success">평점 등록</button>
+          </form>
+        
+        {# 이미 평점을 준 경우 메시지만 표시 #}
+        {% else %}
+          <p class="text-success">이미 평가하셨습니다.</p>
+        {% endif %}
+
+      {# 로그인하지 않은 사용자에게는 로그인 유도 버튼을 표시 #}
+      {% else %}
+        <p>
+          <a href="{% url 'login' %}" class="btn btn-outline-primary">로그인</a> 후 평가할 수 있습니다.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}
